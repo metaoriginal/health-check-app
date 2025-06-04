@@ -1,21 +1,16 @@
 require('dotenv').config();
 const axios = require('axios');
 const pm2 = require('pm2');
-const { execFile } = require('child_process');
 
-const PORT = process.env.PORT || 3000;
 const INTERVAL_MINUTES = parseFloat(process.env.CHECK_INTERVAL_MINUTES) || 1;
 const ENDPOINT = process.env.CHECK_ENDPOINT;
-const FILE_TO_EXECUTE = process.env.FILE_TO_EXECUTE;
 
-if (!ENDPOINT || !FILE_TO_EXECUTE) {
-  console.error('As variáveis CHECK_ENDPOINT e FILE_TO_EXECUTE devem estar definidas no .env');
+if (!ENDPOINT) {
+  console.error('As variáveis CHECK_ENDPOINT devem estar definidas no .env');
   process.exit(1);
 }
 
-console.log(`App rodando na porta ${PORT}`);
 console.log(`Fazendo check no endpoint ${ENDPOINT} a cada ${INTERVAL_MINUTES} minuto(s).`);
-console.log(`Executará o arquivo: ${FILE_TO_EXECUTE} em caso de erro.`);
 
 async function checkEndpoint() {
   try {
@@ -54,4 +49,4 @@ function restartAllProcesses() {
   });
 }
 
-setInterval(checkEndpoint, INTERVAL_MINUTES * 60 * 100);
+setInterval(checkEndpoint, INTERVAL_MINUTES * 60 * 1000);
